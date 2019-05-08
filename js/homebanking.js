@@ -3,7 +3,7 @@ var nombreUsuario = 'Alex Robaina';
 var saldoCuenta = 42000;
 var limiteExtraccion = 6000;
 var saldoAnterior = saldoCuenta;
-var codigoSeguridad = 1234;
+var codigoSeguridad = "1234";
 
 var newLine = '\n';
 
@@ -28,78 +28,67 @@ window.onload = function () {
 // Funciones que tenes que completar
 function cambiarLimiteDeExtraccion() {
    
-    var nuevoLimiteDeExtraccion = prompt('Ingrese nuevo limite de extracción!');
-    console.log(nuevoLimiteDeExtraccion + 'log1');
+    var nuevoLimiteDeExtraccion = parseInt(prompt('Ingrese nuevo limite de extracción!'));
     
-    if (nuevoLimiteDeExtraccion === '' || nuevoLimiteDeExtraccion === null) {
-        console.log(nuevoLimiteDeExtraccion + 'log2');
-        swal('Importante', 'Tienes que ingresar un monto', 'warning');
-        return;
-    } else if (isNaN(nuevoLimiteDeExtraccion) === true) {
-        console.log(nuevoLimiteDeExtraccion + 'log3');
-        swal('Error', 'Ingrese un monto', 'error');
-        return;
-    } else if (nuevoLimiteDeExtraccion <= 0) {
-        console.log(nuevoLimiteDeExtraccion + 'log4');
-        swal('Error', 'Monto no permitido', 'error');
+    if (nuevoLimiteDeExtraccion === '' || nuevoLimiteDeExtraccion === null || isNaN(nuevoLimiteDeExtraccion) === true || nuevoLimiteDeExtraccion <= 0) {
+        alert('Ingrese un monto valido');
         return;
     } else {
         limiteExtraccion = nuevoLimiteDeExtraccion;    
-        swal('Importante', `Su nuevo limite de extracción es: ${limiteExtraccion}`, 'success');
+        alert(`Su nuevo limite de extracción es: ${limiteExtraccion}`);
     }
 
     actualizarLimiteEnPantalla();
 }
 
 function extraerDinero() {
-    var stringExtraccion = prompt('Ingrese el monto que quiere extraer!');
+    var dineroExtraccion = parseInt(prompt('Ingrese el monto que quiere extraer!'));
 
-    validacinDelPrompt(stringExtraccion);
-    var extraccion = parseInt(stringExtraccion);
-
-    validaNumeroNegativo(extraccion);
-    if (extraccion > saldoCuenta) {
-        swal('Importante', 'No tienes suficientes fondos', 'warning');
+    if (dineroExtraccion === '' || dineroExtraccion === null || dineroExtraccion <= 0 || isNaN(dineroExtraccion) === true) {
+        alert('Ingrese un monto valido');
         return;
     }
-    if (extraccion >= limiteExtraccion) {
-        swal('Ingrese otro monto', 'Excedes el limite de extracción', 'warning');
-    }
-
-    if (extraccion % 100 != 0) {
-        swal('Importante', 'Solo entregamos billetes de 100', 'warning');
+     if (dineroExtraccion > saldoCuenta) {
+        alert('No tienes suficientes fondos');
+        return;
+    } 
+     if (dineroExtraccion >= limiteExtraccion) {
+        alert('Sobrepasa el limite de extraccion');
+        return;
+    } else if (dineroExtraccion % 100 != 0) {
+        alert('Solo entregamos billetes de 100');
+        return;
     } else {
-        restarSaldo(extraccion);
-
-        swal('Estado de cuenta', `Saldo anterior: ${saldoAnterior} ${newLine} Dinero extraido ${extraccion} ${newLine} Tu saldo actual es: ${saldoCuenta}`, 'success');
+        restarSaldo(dineroExtraccion);
+        alert(`Saldo anterior: ${saldoAnterior} ${newLine} Dinero extraido ${dineroExtraccion} ${newLine} Tu saldo actual es: ${saldoCuenta}`);
     }
+    
     actualizarSaldoEnPantalla();
+
 }
 
 function depositarDinero() {
-    var stringDeposito = prompt('Ingrese el monto que quiere depositar!');
+    var dineroDepositado = parseInt(prompt('Ingrese el monto que quiere depositar!'));
 
-    validacinDelPrompt(stringDeposito);
+    if (dineroDepositado === '' || dineroDepositado === null || dineroDepositado <= 0 || isNaN(dineroDepositado) === true) {
+        alert('Ingrese un monto valido');
+        return;
+    }
 
-    var deposito = parseInt(stringDeposito);
-    validaNumeroNegativo(deposito);
+    sumaSaldo(dineroDepositado);
 
-    sumaSaldo(deposito);
-
-    swal('Estado de cuenta', `Saldo anterior: ${saldoAnterior} ${newLine} Depositaste ${deposito} ${newLine} Tu saldo actual es: ${saldoCuenta}`, 'success');
+    alert(`Saldo anterior: ${saldoAnterior} ${newLine} Depositaste ${dineroDepositado} ${newLine} Tu saldo actual es: ${saldoCuenta}`);
 
     actualizarSaldoEnPantalla();
 }
 
 function pagarServicio() {
-    var stringPagarServicio = prompt('Ingresa el numero que corresponde al servicio que quieres pagar' + newLine + '1 - Agua' + newLine + '2 - Luz' + newLine + '3 - Internet' + newLine + '4 - Teléfono');
-
-    pagar = parseInt(stringPagarServicio);
+    var pagarServicio = parseInt(prompt('Ingresa el numero que corresponde al servicio que quieres pagar' + newLine + '1 - Agua' + newLine + '2 - Luz' + newLine + '3 - Internet' + newLine + '4 - Teléfono'));
 
     if (saldoCuenta < agua || saldoCuenta < telefono || saldoCuenta < luz || saldoCuenta < internet) {
-        swal('Importante', 'Su saldo no es suficiente!', 'warning');
+        alert('Su saldo no es suficiente!');
     } else {
-        switch (pagar) {
+        switch (pagarServicio) {
             case 1: restarSaldo(agua);
                 break;
             case 2: restarSaldo(luz);
@@ -109,36 +98,35 @@ function pagarServicio() {
             case 4: restarSaldo(telefono);
                 break;
             default:
-                // alert('Selecciona un servicio');
-                swal('Tienes que elegir un servicio!', 'Intenta de nuevo!', 'warning');
+                alert('Selecciona un servicio');
         }
     }
 
-    mensajeServicio();
+    mensajeServicio(pagarServicio);
 
     actualizarSaldoEnPantalla();
 }
 
 function transferirDinero() {
-    stringmontoDeTransferencia = prompt('Ingrese el monto que desea transferir');
+    montoDeTransferencia = parseInt(prompt('Ingrese el monto que desea transferir'));
 
-    validacinDelPrompt(stringmontoDeTransferencia);
-    var montoDeTransferencia = parseInt(stringmontoDeTransferencia);
-
-    validaNumeroNegativo(montoDeTransferencia);
+    if (montoDeTransferencia === '' || montoDeTransferencia === null || montoDeTransferencia <= 0 || isNaN(montoDeTransferencia) === true) {
+        alert('Ingrese un monto valido');
+        return;
+    }
 
     if (montoDeTransferencia > saldoCuenta) {
-        swal('Importante', 'No tienes suficientes fondos para transferir', 'warning');
+        alert('No tienes suficientes fondos para transferir');
     } else {
-        stringCuentaElegida = prompt(`¿Seleccione el numero asignado de cuenta? ${newLine} Cuenta 1 - 1234567 ${newLine} Cuenta 2 - 7654321`);
-        cuentaElegida = parseInt(stringCuentaElegida);
+        cuentaElegida = parseInt(prompt(`¿Seleccione el numero asignado de cuenta? ${newLine} Cuenta 1 - 1234567 ${newLine} Cuenta 2 - 7654321`));
+        
         switch (cuentaElegida) {
             case 1: restarSaldo(montoDeTransferencia);
                 break;
             case 2: restarSaldo(montoDeTransferencia);
                 break;
             default:
-                swal('Error', 'Solo tiene 2 cuentas amigas, seleccione entre la cuenta 1 y la cuenta 2', 'error');
+                alert('Solo tiene 2 cuentas amigas, seleccione entre la cuenta 1 y la cuenta 2', 'error');
         }
     }
 
@@ -146,38 +134,30 @@ function transferirDinero() {
 }
 
 function iniciarSesion() {
-    stringCodigoUsuario = prompt('Ingrese su codigo de seguridad');
-
-    if (stringCodigoUsuario.length != 4) {
-        swal('Codigo incorrecto!', `El dinero fué retenido por seguridad`, 'error');
-        end();
-    }
-    codigoUsuario = parseInt(stringCodigoUsuario);
+    codigoUsuario = prompt('Ingrese su codigo de seguridad');
 
     if (codigoUsuario === codigoSeguridad) {
-        swal('Bienvenido/a!', `${nombreUsuario} ya puedes comenzar a realizar operaciones`, 'success');
+        alert(`Bienvenido/a! ${nombreUsuario} ya puedes comenzar a realizar operaciones`);
     } else {
         saldoCuenta = 0;
-        swal('Codigo incorrecto!', `El dinero fué retenido por seguridad`, 'error');
+        alert('El dinero fué retenido por seguridad');
     }
 }
 
 function depositarCheques() {
-    stringNumeroCheque = prompt('Ingrese el numero de cheque');
+    numeroCheque = parseInt(prompt('Ingrese el numero de cheque'));
 
-    if (stringNumeroCheque === '' || stringNumeroCheque === null) {
-        swal('Error', 'Ingrese numero de cheque valido', 'error');
-        end();
+    if (numeroCheque === '' || numeroCheque === null || numeroCheque <= 0 || isNaN(numeroCheque) === true) {
+        alert('Ingrese un numero valido');
+        return;
     }
 
-    var numeroCheque = parseInt(stringNumeroCheque);
-
-    stringMontoDelCheque = prompt('Ingrese el monto del cheque');
-    validacinDelPrompt(stringMontoDelCheque);
-    var montoDelCheque = parseInt(stringMontoDelCheque);
-
-    validaNumeroNegativo(numeroCheque);
-    validaNumeroNegativo(montoDelCheque);
+    montoDelCheque = parseInt(prompt('Ingrese el monto del cheque'));
+   
+    if (montoDelCheque === '' || montoDelCheque === null || montoDelCheque <= 0 || isNaN(montoDelCheque) === true) {
+        alert('Ingrese un monto valido');
+        return;
+    }
 
     sumaSaldo(montoDelCheque);
 
@@ -203,18 +183,18 @@ function actualizarLimiteEnPantalla() {
  Nuevas funciones
 =========================================*/
 
-function mensajeServicio() {
-    if (pagar === 1) {
+function mensajeServicio(servicio) {
+    if (servicio === 1) {
         alert('has pagado el servicio del agua!' + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Dinero descontado: ' + agua + newLine + 'Dinero disponible: ' + saldoCuenta);
-    }
-    if (pagar === 2) {
+    } 
+    if (servicio === 2) {
         alert('has pagado el servicio del luz!' + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Dinero descontado: ' + luz + newLine + 'Dinero disponible: ' + saldoCuenta);
-    }
-    if (pagar === 3) {
-        alert('has pagado el servicio del telefono!' + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Dinero descontado: ' + telefono + newLine + 'Dinero disponible: ' + saldoCuenta);
-    }
-    if (pagar === 4) {
+    } 
+    if (servicio === 3) {
         alert('has pagado el servicio del internet!' + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Dinero descontado: ' + internet + newLine + 'Dinero disponible: ' + saldoCuenta);
+    }
+    if (servicio === 4) {
+        alert('has pagado el servicio del telefono!' + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Dinero descontado: ' + telefono + newLine + 'Dinero disponible: ' + saldoCuenta);
     }
 }
 
@@ -224,14 +204,4 @@ function sumaSaldo(dinero) {
 
 function restarSaldo(dinero) {
     saldoCuenta = saldoCuenta - dinero;
-}
-
-function validaNumeroNegativo(numero) {
-
-}
-
-function validacinDelPrompt(string) {
-    if (string === '' || string === null) {
-        swal('Importante', 'Tienes que ingresar un monto', 'warning');
-    }
 }
