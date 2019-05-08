@@ -27,20 +27,26 @@ window.onload = function () {
 
 // Funciones que tenes que completar
 function cambiarLimiteDeExtraccion() {
-    var stringLimite = prompt('Ingrese nuevo limite de extracción!');
-
-    validacinDelPrompt(stringLimite);
-    var nuevoLimite = parseInt(stringLimite);
-
-    validaNumeroNegativo(nuevoLimite);
-
-    if (isNaN(nuevoLimite) === true) {
-        swal('Error', `No se puede ingresar Texto`, 'error');
+   
+    var nuevoLimiteDeExtraccion = prompt('Ingrese nuevo limite de extracción!');
+    console.log(nuevoLimiteDeExtraccion + 'log1');
+    
+    if (nuevoLimiteDeExtraccion === '' || nuevoLimiteDeExtraccion === null) {
+        console.log(nuevoLimiteDeExtraccion + 'log2');
+        swal('Importante', 'Tienes que ingresar un monto', 'warning');
         return;
+    } else if (isNaN(nuevoLimiteDeExtraccion) === true) {
+        console.log(nuevoLimiteDeExtraccion + 'log3');
+        swal('Error', 'Ingrese un monto', 'error');
+        return;
+    } else if (nuevoLimiteDeExtraccion <= 0) {
+        console.log(nuevoLimiteDeExtraccion + 'log4');
+        swal('Error', 'Monto no permitido', 'error');
+        return;
+    } else {
+        limiteExtraccion = nuevoLimiteDeExtraccion;    
+        swal('Importante', `Su nuevo limite de extracción es: ${limiteExtraccion}`, 'success');
     }
-
-    limiteExtraccion = nuevoLimite;
-    swal('Importante', `Su nuevo limite de extracción es: ${limiteExtraccion}`, 'success');
 
     actualizarLimiteEnPantalla();
 }
@@ -221,15 +227,11 @@ function restarSaldo(dinero) {
 }
 
 function validaNumeroNegativo(numero) {
-    if (numero <= 0) {
-        swal('Error', 'Monto no permitido', 'error');
-        end();
-    }
+
 }
 
 function validacinDelPrompt(string) {
     if (string === '' || string === null) {
         swal('Importante', 'Tienes que ingresar un monto', 'warning');
-        end();
     }
 }
