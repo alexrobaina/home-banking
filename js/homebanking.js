@@ -13,9 +13,6 @@ var telefono = 425;
 var luz = 210;
 var internet = 570;
 
-// Cuentas amigas
-var cuentaAmiga1 = 1234567;
-var cuentaAmiga2 = 7654321;
 
 // Ejecución de las funciones que actualizan los valores de las variables en el HTML.
 window.onload = function () {
@@ -29,13 +26,15 @@ window.onload = function () {
 function cambiarLimiteDeExtraccion() {
    
     var nuevoLimiteDeExtraccion = parseInt(prompt('Ingrese nuevo limite de extracción!'));
-    
-    if (nuevoLimiteDeExtraccion === '' || nuevoLimiteDeExtraccion === null || isNaN(nuevoLimiteDeExtraccion) === true || nuevoLimiteDeExtraccion <= 0) {
+    console.log(nuevoLimiteDeExtraccion);
+
+    if (! nuevoLimiteDeExtraccion || nuevoLimiteDeExtraccion <= 0) {
+        
         alert('Ingrese un monto valido');
         return;
     } else {
         limiteExtraccion = nuevoLimiteDeExtraccion;    
-        alert(`Su nuevo limite de extracción es: ${limiteExtraccion}`);
+        alert('Su nuevo limite de extracción es: ' + limiteExtraccion);
     }
 
     actualizarLimiteEnPantalla();
@@ -44,7 +43,7 @@ function cambiarLimiteDeExtraccion() {
 function extraerDinero() {
     var dineroExtraccion = parseInt(prompt('Ingrese el monto que quiere extraer!'));
 
-    if (dineroExtraccion === '' || dineroExtraccion === null || dineroExtraccion <= 0 || isNaN(dineroExtraccion) === true) {
+    if (! dineroExtraccion || dineroExtraccion <= 0) {
         alert('Ingrese un monto valido');
         return;
     }
@@ -52,7 +51,7 @@ function extraerDinero() {
         alert('No tienes suficientes fondos');
         return;
     } 
-     if (dineroExtraccion >= limiteExtraccion) {
+     if (dineroExtraccion > limiteExtraccion) {
         alert('Sobrepasa el limite de extraccion');
         return;
     } else if (dineroExtraccion % 100 != 0) {
@@ -60,7 +59,7 @@ function extraerDinero() {
         return;
     } else {
         restarSaldo(dineroExtraccion);
-        alert(`Saldo anterior: ${saldoAnterior} ${newLine} Dinero extraido ${dineroExtraccion} ${newLine} Tu saldo actual es: ${saldoCuenta}`);
+        alert('Saldo anterior: ' + saldoAnterior + newLine + 'Dinero extraido: ' + dineroExtraccion + newLine + 'Tu saldo actual es: ${saldoCuenta}');
     }
     
     actualizarSaldoEnPantalla();
@@ -70,19 +69,20 @@ function extraerDinero() {
 function depositarDinero() {
     var dineroDepositado = parseInt(prompt('Ingrese el monto que quiere depositar!'));
 
-    if (dineroDepositado === '' || dineroDepositado === null || dineroDepositado <= 0 || isNaN(dineroDepositado) === true) {
+    if (! dineroDepositado || dineroDepositado <= 0) {
         alert('Ingrese un monto valido');
         return;
     }
 
     sumaSaldo(dineroDepositado);
 
-    alert(`Saldo anterior: ${saldoAnterior} ${newLine} Depositaste ${dineroDepositado} ${newLine} Tu saldo actual es: ${saldoCuenta}`);
+    alert('Saldo anterior: ' + saldoAnterior + newLine + 'Depositaste: ' + dineroDepositado + newLine + 'Tu saldo actual es: ' + saldoCuenta);
 
     actualizarSaldoEnPantalla();
 }
 
 function pagarServicio() {
+
     var pagarServicio = parseInt(prompt('Ingresa el numero que corresponde al servicio que quieres pagar' + newLine + '1 - Agua' + newLine + '2 - Luz' + newLine + '3 - Internet' + newLine + '4 - Teléfono'));
 
     if (saldoCuenta < agua || saldoCuenta < telefono || saldoCuenta < luz || saldoCuenta < internet) {
@@ -108,9 +108,9 @@ function pagarServicio() {
 }
 
 function transferirDinero() {
-    montoDeTransferencia = parseInt(prompt('Ingrese el monto que desea transferir'));
+    var montoDeTransferencia = parseInt(prompt('Ingrese el monto que desea transferir'));
 
-    if (montoDeTransferencia === '' || montoDeTransferencia === null || montoDeTransferencia <= 0 || isNaN(montoDeTransferencia) === true) {
+    if (! montoDeTransferencia || montoDeTransferencia <= 0) {
         alert('Ingrese un monto valido');
         return;
     }
@@ -118,7 +118,8 @@ function transferirDinero() {
     if (montoDeTransferencia > saldoCuenta) {
         alert('No tienes suficientes fondos para transferir');
     } else {
-        cuentaElegida = parseInt(prompt(`¿Seleccione el numero asignado de cuenta? ${newLine} Cuenta 1 - 1234567 ${newLine} Cuenta 2 - 7654321`));
+    
+        var cuentaElegida = parseInt(prompt('¿Seleccione el numero asignado de cuenta?' + newLine + 'Cuenta 1 - 1234567' + newLine + 'Cuenta 2 - 7654321'));
         
         switch (cuentaElegida) {
             case 1: restarSaldo(montoDeTransferencia);
@@ -126,7 +127,7 @@ function transferirDinero() {
             case 2: restarSaldo(montoDeTransferencia);
                 break;
             default:
-                alert('Solo tiene 2 cuentas amigas, seleccione entre la cuenta 1 y la cuenta 2', 'error');
+                alert('Solo tiene 2 cuentas amigas, seleccione entre la cuenta 1 y la cuenta 2');
         }
     }
 
@@ -134,10 +135,10 @@ function transferirDinero() {
 }
 
 function iniciarSesion() {
-    codigoUsuario = prompt('Ingrese su codigo de seguridad');
+    var codigoUsuario = prompt('Ingrese su codigo de seguridad');
 
     if (codigoUsuario === codigoSeguridad) {
-        alert(`Bienvenido/a! ${nombreUsuario} ya puedes comenzar a realizar operaciones`);
+        alert('Bienvenido/a! ' + nombreUsuario + 'ya puedes comenzar a realizar operaciones');
     } else {
         saldoCuenta = 0;
         alert('El dinero fué retenido por seguridad');
@@ -145,14 +146,14 @@ function iniciarSesion() {
 }
 
 function depositarCheques() {
-    numeroCheque = parseInt(prompt('Ingrese el numero de cheque'));
+    var numeroCheque = parseInt(prompt('Ingrese el numero de cheque'));
 
-    if (numeroCheque === '' || numeroCheque === null || numeroCheque <= 0 || isNaN(numeroCheque) === true) {
+    if (! numeroCheque || numeroCheque <= 0) {
         alert('Ingrese un numero valido');
         return;
     }
 
-    montoDelCheque = parseInt(prompt('Ingrese el monto del cheque'));
+    var montoDelCheque = parseInt(prompt('Ingrese el monto del cheque'));
    
     if (montoDelCheque === '' || montoDelCheque === null || montoDelCheque <= 0 || isNaN(montoDelCheque) === true) {
         alert('Ingrese un monto valido');
@@ -161,7 +162,7 @@ function depositarCheques() {
 
     sumaSaldo(montoDelCheque);
 
-    swal('Estado de cuenta', `Saldo anterior: ${saldoAnterior} ${newLine} Depositaste ${montoDelCheque} ${newLine} Tu saldo actual es: ${saldoCuenta} ${newLine} El numero de cheque: ${numeroCheque}`, 'success');
+    alert('Saldo anterior: ' + saldoAnterior + newLine + 'Depositaste: ' + montoDelCheque + newLine + 'Tu saldo actual es: ' + saldoCuenta + newLine + 'El numero de cheque: ' + numeroCheque);
 
     actualizarSaldoEnPantalla();
 }
