@@ -1,9 +1,11 @@
 // Declaración de variables
 var nombreUsuario = 'Alex Robaina';
 var saldoCuenta = 42000;
+var saldoAnterior = Number;
 var limiteExtraccion = 6000;
-var saldoAnterior = saldoCuenta;
-var codigoSeguridad = "1234";
+var codigoSeguridad = '1234';
+var cuenta1 = '1234567';
+var cuenta2 = '7654321';
 
 var newLine = '\n';
 
@@ -26,7 +28,6 @@ window.onload = function () {
 function cambiarLimiteDeExtraccion() {
    
     var nuevoLimiteDeExtraccion = parseInt(prompt('Ingrese nuevo limite de extracción!'));
-    console.log(nuevoLimiteDeExtraccion);
 
     if (! nuevoLimiteDeExtraccion || nuevoLimiteDeExtraccion <= 0) {
         
@@ -42,24 +43,29 @@ function cambiarLimiteDeExtraccion() {
 
 function extraerDinero() {
     var dineroExtraccion = parseInt(prompt('Ingrese el monto que quiere extraer!'));
-
+    
     if (! dineroExtraccion || dineroExtraccion <= 0) {
-        alert('Ingrese un monto valido');
+        alert('Ingrese un monto válido');
         return;
     }
-     if (dineroExtraccion > saldoCuenta) {
+    if (dineroExtraccion > saldoCuenta) {
         alert('No tienes suficientes fondos');
         return;
     } 
-     if (dineroExtraccion > limiteExtraccion) {
-        alert('Sobrepasa el limite de extraccion');
+    if (dineroExtraccion > limiteExtraccion) {
+        alert('El monto ingresado sobrepasa el limite de extraccion');
         return;
     } else if (dineroExtraccion % 100 != 0) {
         alert('Solo entregamos billetes de 100');
         return;
     } else {
+        
+        
+        saldoAnterior = saldoCuenta
+
         restarSaldo(dineroExtraccion);
-        alert('Saldo anterior: ' + saldoAnterior + newLine + 'Dinero extraido: ' + dineroExtraccion + newLine + 'Tu saldo actual es: ${saldoCuenta}');
+
+        alert('Has retirado: ' + dineroExtraccion + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Saldo actual: ' + saldoCuenta);
     }
     
     actualizarSaldoEnPantalla();
@@ -74,9 +80,11 @@ function depositarDinero() {
         return;
     }
 
+    saldoAnterior = saldoCuenta
+
     sumaSaldo(dineroDepositado);
 
-    alert('Saldo anterior: ' + saldoAnterior + newLine + 'Depositaste: ' + dineroDepositado + newLine + 'Tu saldo actual es: ' + saldoCuenta);
+    alert('Has depositado: ' + dineroDepositado + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Saldo actual: ' + saldoCuenta);
 
     actualizarSaldoEnPantalla();
 }
@@ -89,19 +97,26 @@ function pagarServicio() {
         alert('Su saldo no es suficiente!');
     } else {
         switch (pagarServicio) {
-            case 1: restarSaldo(agua);
+            case 1: 
+            saldoAnterior = saldoCuenta
+            restarSaldo(agua);
                 break;
-            case 2: restarSaldo(luz);
+            case 2: 
+            saldoAnterior = saldoCuenta
+            restarSaldo(luz);
                 break;
-            case 3: restarSaldo(internet);
+            case 3: 
+            saldoAnterior = saldoCuenta
+            restarSaldo(internet);
                 break;
-            case 4: restarSaldo(telefono);
+            case 4: 
+            saldoAnterior = saldoCuenta
+            restarSaldo(telefono);
                 break;
             default:
                 alert('Selecciona un servicio');
         }
     }
-
     mensajeServicio(pagarServicio);
 
     actualizarSaldoEnPantalla();
@@ -119,12 +134,14 @@ function transferirDinero() {
         alert('No tienes suficientes fondos para transferir');
     } else {
     
-        var cuentaElegida = parseInt(prompt('¿Seleccione el numero asignado de cuenta?' + newLine + 'Cuenta 1 - 1234567' + newLine + 'Cuenta 2 - 7654321'));
+        var cuentaElegida = parseInt(prompt('¿Seleccione el numero asignado de cuenta?' + newLine + 'Cuenta 1 - ' + cuenta1 + newLine + 'Cuenta 2 - ' + cuenta2));
         
         switch (cuentaElegida) {
             case 1: restarSaldo(montoDeTransferencia);
+                    alert('Se han transferido $' + montoDeTransferencia + newLine + 'Cuenta seleccionada: ' + cuenta1)
                 break;
             case 2: restarSaldo(montoDeTransferencia);
+                    alert('Se han transferido $' + montoDeTransferencia + newLine + 'Cuenta seleccionada: ' + cuenta2)
                 break;
             default:
                 alert('Solo tiene 2 cuentas amigas, seleccione entre la cuenta 1 y la cuenta 2');
@@ -160,9 +177,10 @@ function depositarCheques() {
         return;
     }
 
+    saldoAnterior = saldoCuenta
     sumaSaldo(montoDelCheque);
 
-    alert('Saldo anterior: ' + saldoAnterior + newLine + 'Depositaste: ' + montoDelCheque + newLine + 'Tu saldo actual es: ' + saldoCuenta + newLine + 'El numero de cheque: ' + numeroCheque);
+    alert('Saldo anterior: ' + saldoAnterior + newLine + 'Monto del cheque: ' + montoDelCheque + newLine + 'Saldo actual: ' + saldoCuenta + newLine + 'Numero de cheque: ' + numeroCheque);
 
     actualizarSaldoEnPantalla();
 }
@@ -186,16 +204,16 @@ function actualizarLimiteEnPantalla() {
 
 function mensajeServicio(servicio) {
     if (servicio === 1) {
-        alert('has pagado el servicio del agua!' + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Dinero descontado: ' + agua + newLine + 'Dinero disponible: ' + saldoCuenta);
+        alert('Has pagado el servicio del agua!' + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Dinero descontado: ' + agua + newLine + 'Saldo actual: ' + saldoCuenta);
     } 
     if (servicio === 2) {
-        alert('has pagado el servicio del luz!' + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Dinero descontado: ' + luz + newLine + 'Dinero disponible: ' + saldoCuenta);
+        alert('has pagado el servicio del luz!' + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Dinero descontado: ' + luz + newLine + 'Saldo actual: ' + saldoCuenta);
     } 
     if (servicio === 3) {
-        alert('has pagado el servicio del internet!' + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Dinero descontado: ' + internet + newLine + 'Dinero disponible: ' + saldoCuenta);
+        alert('has pagado el servicio del internet!' + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Dinero descontado: ' + internet + newLine + 'Saldo actual: ' + saldoCuenta);
     }
     if (servicio === 4) {
-        alert('has pagado el servicio del telefono!' + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Dinero descontado: ' + telefono + newLine + 'Dinero disponible: ' + saldoCuenta);
+        alert('has pagado el servicio del telefono!' + newLine + 'Saldo anterior: ' + saldoAnterior + newLine + 'Dinero descontado: ' + telefono + newLine + 'Saldo actual: ' + saldoCuenta);
     }
 }
 
